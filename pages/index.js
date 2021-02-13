@@ -23,28 +23,29 @@ const QUERY_SHOP = gql`
   }
 `;
 
+const GET_PRODUCT_BY_ID = gql`
+  query GetProduct($productId: ID!){
+    product(id: $productId) {
+      title
+      id
+      tags
+      variants(first: 10) {
+        edges {
+          node {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+`;
 const Index = () => {
   
-  // const GET_PRODUCT_BY_ID = gql`
-  //   query GetProduct($id: String!){
-  //     product(id: $id) {
-  //       title
-  //       id
-  //       tags
-  //       variants(first: 10) {
-  //         edges {
-  //           node {
-  //             id
-  //             title
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // `;
 
 
-  const [fetchStoreDetails, { loading, error, data }] = useLazyQuery(QUERY_SHOP);
+  // const [fetchStoreDetails, { loading, error, data }] = useLazyQuery(QUERY_SHOP);
+  const [getProduct, { loading, error, data }] = useLazyQuery(GET_PRODUCT_BY_ID);
 
 
   const [pickerState, setPickerState] = useState(false);
@@ -54,7 +55,12 @@ const Index = () => {
     setPickerState(false)
     // return array of selected product IDs
     const selectedProductIds = selectPayload.selection.map(selection => selection.id)
-    console.log(selectedProductIds)
+    console.log(selectedProductIds[0])
+    getProduct({variables : { productId : selectedProductIds[0] } })
+
+    console.log(data)
+    console.log(loading)
+    console.log(error)
     // selectedProductIds.forEach(id => {
     //   const product = useQuery(GET_PRODUCT_BY_ID, {
     //     variables: { id: id } })
@@ -70,14 +76,15 @@ const Index = () => {
         onAction: () => setPickerState(true)
       }}
     >
-      {data && data.shop && (
+      {/* {data && data.shop && (
         <h1>{data.shop.name}</h1>
-      )}
+      )} */}
+      { loading && loading }
       <ResourcePicker 
         resourceType="Product"
         open={pickerState}
-        // onSelection={selectPayload => handlePicker(selectPayload)}
-        onSelection={selectPayload => fetchStoreDetails()}
+        onSelection={selectPayload => handlePicker(selectPayload)}
+        // onSelection={selectPayload => fetchStoreDetails()}
         onCancel={() => setPickerState(false)}
         />
     </Page>
