@@ -1,12 +1,16 @@
 import { Heading, Page, Button } from "@shopify/polaris";
 
+import { authenticatedFetch, getSessionToken } from "@shopify/app-bridge-utils";
 import { ResourcePicker } from '@shopify/app-bridge-react';
 
 import {useState} from  "react";
 import gql from "graphql-tag";
-import { useLazyQuery } from "@apollo/react-hooks";
+import { useLazyQuery, useApolloClient } from "@apollo/react-hooks";
+
 
 import Link from 'next/link'
+
+// const fetch = require('node-fetch');
 
 
 
@@ -45,8 +49,17 @@ const GET_PRODUCT_BY_ID = gql`
   }
 `;
 const Product = () => {
-  
+  // console.log(getSessionToken(window.app))
 
+  // const app = useApolloClient();
+  // console.log('app')
+  // console.log(app)
+
+  // authenticatedFetch(app)
+  // getSessionToken(app)
+  //   .then(token => {
+  //     console.log(token)
+  //   });
 
   // const [fetchStoreDetails, { loading, error, data }] = useLazyQuery(QUERY_SHOP);
   const [getProduct, { loading, error, data }] = useLazyQuery(GET_PRODUCT_BY_ID);
